@@ -1,0 +1,7 @@
+string = e um texto que precisa esta entre aspas " "
+variável = podem ser tanto palavras que guardam valores como são informações que variam 
+Dado booleano bool = é um tipo de dado que so tem dois valores possíveis, verdadeiro ou falso
+True ou Fase = verdadeiro ou falso - 1 ou 0 
+
+STEP - Roda a cada frame do jogo
+

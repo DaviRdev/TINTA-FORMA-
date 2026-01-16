@@ -1,0 +1,2161 @@
+AULA 00B A 02 - INICIANDO O PLAYER
+
+
+ANTES DE TUDO PRECISAMOS IR EM PREFERENCES DO GAMEMAKER E VAMOS EM CODE EDITOR 2 DPS ATIVAMOS ELE 
+
+DPS DISSO VAMOS EM GAME OPTIONS "NA ENGRENAGEM" E VAMOS EM GENERAL E DESATIVAMOS A OPÇÃO "Automatically remove unsed assets when compiling" POIS ESSA OPÇÃO BUGA AS SPRITES E OS ASSETS.
+
+
+BASICAMENTE NESSA AULA IMPORTAMOS O PLAYER E COLOCAMOS A SPRITE PARA SER BOOTM CENTRE POIS VAMOS UTILIZAR BASTANTE O PE DO PERSONAGEM TANTO PARA EFEITO COMO OUTRAS COISAS, IMPORTAMOS A SPRITE IDDLE DELE DO PLAYER 
+
+
+
+
+
+AULA 03 - VIEWPORT E CAMERA DO JOGO
+
+
+BASICAMENTE NESSA AULA ELE EXPLICOU QUE O VIEWPORT E A "CAMERA" DA ROOM AMBAS TEM QUE ESTA COM A MESMA PORPORÇÃO POIS CAUSA BUGS
+
+
+
+
+AULA 04 - RESOLVENDO BUG DA SPRITE BORRADA
+
+
+
+NESSA AULA ELE ENSINOU A COMO TIRAR O BUG DE BORRAR DA SPRITE VAMOS EM GAME OPTIONS - WINDOWS - GRAPHICS E LA DESATIVAMOS A OPÇÃO "Interpolate colours between pixels" POIS ISSO AQUI ENTRA EM CONFLITO COM PIXEL ARTE E CONSEQUENTEMENTE DEIXA ELA BORRADA
+
+
+
+
+
+AULA 05 A 06 - DEFININDO A RESOLUÇÃO DO JOGO
+
+
+NESSA AULA ELE FALA SOBRE COMO DEFINIMOS A CAMERA DE ACORDO COM O TIPO DE GAME OU SITUAÇÃO ALEM DISSO ELE FALA PRO "USUARIO QUE ESTA CRIANDO O JOGO" DEFINIR O TIPO DE VIEWPORT POIS ISSO E O MONITOR, NO DO PROFESSOR ELE DEIXOU ASSIM
+
+
+
+Camera Properties
+
+Width : 320   Height : 180
+
+
+ViewPort Properties
+
+Width : 1280  Height : 720
+
+
+
+
+
+AULA 07 - CRIANDO UM BACKGROUND
+
+
+NESSA AULA CRIAMOS UM SPRITE CHAMADA "spr_bg" DEMOS O TAMANHO DELA PARA 32X32 DPS COLORIMOS ELA  DPS DISSO ADICIONAMOS NA INSTANCIA DE BACKGROUND DPS DEMOS UM HORIZONTAL TILE E VERTICAL TILE NELA E DPS MUDAMOS A VELOCIDADE DO X E Y DELA PARA 0.1 AMBAS
+
+
+
+
+
+AULA 08 - COLOCANDO O PERSONAGEM PARA ANDAR
+
+
+//CREATE DO PLAYER
+
+
+#region Varivaveis
+
+//Varivaies de movimento
+velh = 0;
+max_velh = 1;
+
+#endregion
+
+
+
+//CREATE DO PLAYER
+#region Métodos
+
+
+//METODO DE MOVIMENTAÇÃO
+movimento = function()
+{
+    
+    //PEGANDO OS INPUTS
+    var _right = keyboard_check(vk_right);
+    var _left =  keyboard_check(vk_left);
+    
+    
+    //APLICANDO OS INPUTS NA VELH
+    velh = (_right - _left) * max_velh;
+    
+    
+    //APLICANDO A VELH NO EIXO X
+    x += velh;
+    
+    
+    
+    
+    
+    
+    
+}
+
+
+
+
+#endregion
+
+
+
+
+//STEP
+
+
+movimento();
+
+
+
+AULA 09 - PEGANDO OS INPUTS DO USUARIO
+
+
+OS INPUTS NESSA AULA NADA MAIS E DOQ EU CRIO UMA FUNCTION COM OS MOVIMENTOS DO PLAYER MAS EU SO VOU "CONSEGUIR ANDAR OU FAZER ALGO SE EU PEGAR OS INPUTS" UM EXEMPLO E CUTSCENE EU QUERO Q O PLAYER FIQUE PARADO ENTÃO EU NAO CHAMO OS INPUTS MAS SE EU QUISER Q ELE ANDE ENTÃO EU CHAMO OS INPUTS NAO A MOVIMENTAÇÃO DELE Q FICA "O TEMPO TODO"
+
+
+
+NESSA AULA ELE BASICAMENTE TB REFINA A MOVIMENTAÇÃO ELE MUDA ALGUMAS COISAS DA AULA PASSADA FICANDO ASSIM
+
+
+
+//CREATE DO PLAYER
+
+
+//CARIAVEIS DE INPUTS
+right =  false;
+left  =  false;
+jump  =  false;
+
+
+
+#endregion
+
+
+
+
+//CREATE DO PLAYER
+#region Métodos
+
+
+
+//METODO PARA PEGAR INPUTS
+pega_input = function()
+{
+    right = keyboard_check(vk_right) or keyboard_check(ord("D"));     
+    left  = keyboard_check(vk_left)  or keyboard_check(ord("A"));  
+    jump  = keyboard_check(vk_space);
+}
+
+
+//CREATE DO PLAYER
+
+//METODO DE MOVIMENTAÇÃO
+movimento = function()
+{
+    
+   
+    
+    //APLICANDO OS INPUTS NA VELH
+    velh = (right - left) * max_velh;
+    
+    
+    //APLICANDO A VELH NO EIXO X
+    x += velh;
+    
+
+    
+    
+}
+
+
+
+
+//STEP DO PLAYER
+
+
+
+pega_input(); //AQUI E ONDE CHAMA O INPUT 
+
+movimento();
+
+
+
+
+
+
+AULA 10 - INICIANDO COLISÃO
+
+
+PRIMEIRO CRIAMOS UM OBJ CHAMADO "ob_parede" DEMOS AS PROPORCOES DELE PARA 32X32 E DEMOS UMA COR PARA ELE DPS ADICIONAMOS NA ROOM E DPS COLOCAMOS O CODIGO ABAIXO
+
+
+
+TIRAMOS O X+= QUE ESTAVA ANTES E SUBITITUIMOS POR ESSE QUE SERVE PARA ANDAR E COLIDIR COM A "PAREDE" FICANDO ASSIM
+
+
+
+//CREATE DO PLAYER
+
+//METODO DE MOVIMENTAÇÃO
+movimento = function()
+{
+    
+   
+    
+    //APLICANDO OS INPUTS NA VELH
+    velh = (right - left) * max_velh;
+    
+    
+    //USANDO O  MOVE AND COLLIDE
+    move_and_collide(velh, 0, obj_parede);
+    
+
+    
+    
+}
+
+
+
+AULA 11 a 14 - MOVE AND COLLIDE
+
+
+VAMOS CRIAR UMA VARIAVEL CHAMADA "chao"
+
+//CREATE DO PLAYER
+
+//VARIAVEIS DOS LEVELS
+chao = false;
+
+
+
+DPS DISSO VAMOS CRIAR UMA FUNCTION CHAMADA "checa_chao" PARA QUANDO O PLAYER TOCAR O CHAO ATIVAR A COLISAO GRAVIDADE E OUTRAS COISAS
+//CREATE DO PLAYER
+
+checa_chao = function()
+{
+    chao = place_meeting(x, y + 1, obj_parede);
+}
+
+
+DPS DISSO VAMOS NO STEP PARA CHAMAR A FUNÇÃO
+
+
+//STEP DO PLAYER
+
+checa_chao();
+
+show_debug_message(chao); AQUI E PARA VER SE FUNCIONOU A FUNÇÃO
+
+
+APOS ISSO VAMOS SEGUIR OS CODIGO ABAIXO
+
+VAMOS CRIAR DUAS VARIVEIS NOVAS DESSA VEZ PARA A COLISÃO VERTICAL E MOVIMENTAÇÃO VERTICAL
+
+//CREATE DO PLAYER
+
+
+velv = 0;
+max_velv = 4;
+
+
+
+AGR DENTRO DO MOVIMENTO FUNCTION ADICIONAMOS ESSE CODIGO DE COLISAO FICANDO ASSIM
+
+//CREATE DO PLAYER
+
+//METODO DE MOVIMENTAÇÃO
+movimento = function()
+{
+    
+   
+    
+    //APLICANDO OS INPUTS NA VELH
+    velh = (right - left) * max_velh;
+    
+    
+    //USANDO O  MOVE AND COLLIDE HORIZONTAL 
+    move_and_collide(velh, 0, obj_parede, 4);
+    
+    
+    //USANDO O MOVE AND COLLIDE VERTICAL
+    move_and_collide(0, velv, obj_parede);
+     
+    
+}
+
+
+FEITO ISSO AGR VAMOS CRIAR UMA VARIAVEL PARA NOSSA GRAVIDADE
+
+grav = 0.2;
+
+AGR VAMOS ATIVAR NOSSA GRAVIDADE NO MOVIMENTO FUNCTION FICANDO ASSIM
+
+
+//CREATE DO PLAYER
+
+//METODO DE MOVIMENTAÇÃO
+movimento = function()
+{
+    
+   
+    //APLICANDO A GRAVIDADE
+    //SE EU ESTOU TOCANDO NO CHÃO EU APLICO A GRAVIDADE A MIHHA VELV
+    if (!chao)
+    {
+        velv += grav;
+    }
+    else 
+    {
+        velv = 0;
+    }
+    
+    
+    
+    
+    
+    //APLICANDO OS INPUTS NA VELH
+    velh = (right - left) * max_velh;
+    
+    
+    //USANDO O  MOVE AND COLLIDE HORIZONTAL
+    move_and_collide(velh, 0, obj_parede, 4);
+    
+    
+    //USANDO O MOVE AND COLLIDE VERTICAL
+    move_and_collide(0, velv, obj_parede);
+     
+    
+    
+    
+    
+}
+
+AULA 15 - FAZENDO O PLAYER PULAR
+
+//CREATE DO PLAYER
+  
+    //APLICANDO A GRAVIDADE
+    //SE EU ESTOU TOCANDO NO CHÃO EU APLICO A GRAVIDADE A MIHHA VELV
+    if (!chao)
+    {
+        velv += grav;
+    }
+    else 
+    {
+        velv = 0;
+    
+        //SE EU APERTEI ESPAÇO EU PULO
+	if (jump)
+        {
+           velv = -max_velv;
+         
+        }
+      
+
+    }
+    
+
+
+
+AULA 17 - DEFININDO OS ATRIBUTOS DO PLAYER
+
+
+BASICAMENTE ELE MOSTRA COMO PODEMOS REFINAR O PULO DO PLAYER MUDANDO O "max_velv" e o grav
+
+
+
+
+
+AULA 18 A 22 DEBUG
+
+BASICAMENTE NESSAS AULAS ELE FALA SOBRE DIFERENTES TIPOS DE COMO DEBUGAR UM CODIGO PARA AJUSTALO MAS ELE DEU FOCO NO "dbg_slider();" E "dbg_watch();
+
+
+//CREATE DO PLAYER
+
+#region DEBUGS
+
+show_debug_overlay(1);
+
+//VENDO AS INFORMAÇÕES DA MINHA VELV
+var _ref_vevl = ref_create(id, "velv");
+dbg_watch(_ref_vevl, "velv");
+
+
+
+//PODENDO MUDAR O MAX VELV
+dbg_slider(ref_create(id, "max_velv"), 0, 10, "Max velv", .1); 
+
+
+
+//PODENDO MUDAR O VALOR DA GRAV
+dbg_slider(ref_create(id, "grav"), 0, 1, "Gravivdade",0.01); 
+
+#endregion
+
+
+
+
+
+
+AULA 23 A 24
+
+BASICAMENTE NESSAS AULAS ELE SO AJUSTOU O PLAYER PARA NAO ENTRAR NO CHAO ARREDONDANDO O Y DO PLAYER FICANDO ASSIM O CODIGO 
+
+
+//CREATE DO PLAYER
+
+//METODO DE MOVIMENTAÇÃO
+movimento = function()
+{
+    
+   
+    //APLICANDO A GRAVIDADE
+    //SE EU ESTOU TOCANDO NO CHÃO EU APLICO A GRAVIDADE A MIHHA VELV
+    if (!chao)
+    {
+        velv += grav;
+    }
+    else 
+    {
+        velv = 0;
+    
+        
+        
+        //VOU ARREDONDAR A POSIÇÃO DO Y DELE
+        y = round(y);
+
+  
+
+AULA 25 A 27 - EXIBINDO DEBUG PT1 E PT2 E PT3
+
+
+VAMOS CRIAR UMA SCRIPT CHAMADA UTILIDADES
+
+//SCRIPT
+
+global.debug = false;
+
+
+
+
+DPS DISSO VAMOS CRIAR UMA FUNÇÃO NOVA
+
+
+//CREATE DO PLAYER
+
+ativa_debug = function()
+{
+    //ALTERANDO O MODO DEBUG
+    if (keyboard_check_pressed(vk_tab))
+    {
+        //SE O DEBUG É TRUE ELE VIRA FALSE, SE É FALSE ELE VIRA TRUE
+        global.debug = !global.debug;
+        
+        
+        //SE O JOGO ESTA NO MODO DEBUG, EU RODO O DEBUG
+        
+        if (global.debug)
+        {
+            roda_debug();
+    
+        }
+        else 
+        {   
+            //DESATIVANDO O DEBUG OVERLAY
+            show_debug_overlay(0);
+           //SE A MINHA VIEW EXISTE E EU NÃO ESTOU NO MODO DEBUG, EU DELETO ELA
+           if (dbg_view_exists(view_player))
+           {
+                
+               dbg_view_delete(view_player);
+            
+            }
+            
+        }	
+        
+        
+        
+        
+        }   
+        
+
+APOS ISSO VAMOS ATIVAR ESSA MESMA FUNÇÃO NO STEP
+
+
+
+//STEP
+
+
+ativa_debug();
+
+
+
+
+APOS ISSO VOLTAMOS NO CREATE DO PLAYER E MODIFICAMOS A NOSSA FUNÇÃO "roda debug" ALEM DISSO CRIAMOS TB UMA VARIAVEL CHAMADA view_player = noone; FICANDO ASSIM.
+
+
+//CREATE DO PLAYER
+
+#region DEBUGS
+
+
+view_player = noone;
+
+
+//MÉTODO DE DEBUG DO JOGO
+roda_debug = function()
+{ 
+    
+    //SE NÃO TA EM DEBUG, ELE SÓ SAI DO MÉTODO
+    //if (!global.debug) return;
+    
+    show_debug_overlay(1);
+    
+    
+    view_player = dbg_view("View Player", 1, 40, 100, 300, 400);
+    
+    
+    //VENDO AS INFORMAÇÕES DA MINHA VELV
+    var _ref_vevl = ref_create(id, "velv");
+    dbg_watch(_ref_vevl, "velv");
+
+
+
+    //PODENDO MUDAR O MAX VELV
+    dbg_slider(ref_create(id, "max_velv"), 0, 10, "Max velv", .1); 
+
+
+
+    //PODENDO MUDAR O VALOR DA GRAV
+    dbg_slider(ref_create(id, "grav"), 0, 1, "Gravivdade",0.01); 
+    
+}
+
+
+AULA 28 a 29 - INTRODUÇÃO  A MACROS
+
+
+VAMOS NO SCRIPT "UTILIDADES"
+
+DENTRO DELE VAMOS ADICIONAR UM MACRO
+
+//SCRIPT - UTILIDADES
+
+
+#macro DEBUG_MODE 0
+
+
+
+DPS VAMOS VOLTAR NO CREATE DO PLAYER E VAMOS NA FUNÇÃO ATIVA_DEBUG PARA ADICIONAR O MACRO LA FICANDO O CODIGO ASSIM
+
+//CREATE DO PLAYER
+
+
+ativa_debug = function()
+{
+    
+    //SE O JOGO NÃO ESTA NO MODO DEBUG, ELE NÃO FAZ NADA DO DEBUG
+    if (!DEBUG_MODE) return
+    
+    
+    
+    
+    
+    //ALTERANDO O MODO DEBUG
+    if (keyboard_check_pressed(vk_tab))
+    {
+        //SE O DEBUG É TRUE ELE VIRA FALSE, SE É FALSE ELE VIRA TRUE
+        global.debug = !global.debug;
+        
+        
+        //SE O JOGO ESTA NO MODO DEBUG, EU RODO O DEBUG
+        
+        if (global.debug)
+        {
+            roda_debug();
+    
+        }
+        else 
+        {   
+            //DESATIVANDO O DEBUG OVERLAY
+            show_debug_overlay(0);
+           //SE A MINHA VIEW EXISTE E EU NÃO ESTOU NO MODO DEBUG, EU DELETO ELA
+           if (dbg_view_exists(view_player))
+           {
+                
+               dbg_view_delete(view_player);
+            
+            }
+            
+        }	
+        
+        
+        
+        
+        }   
+        
+       
+
+
+}
+
+
+FEITO ISSO VAMOS FAZER A SEGUINTE COISA VAMOS NO CANTO SUPERIOR DIREITO ABAIXO DO ICONE DE PERFIL E CLICKAMOS NUM ICONE REDONDO COM CRUZ DPS VAMOS EM CONFIG AO LADO DO CONFIG TEM 3 RISCOS CLICKAMOS LA E DPS VAMOS EM CREATE E CRIAMOS DOIS UM CHAMADO "modo_normal" E O OUTRO "modo_debug"
+
+
+
+APOS ISSO VAMOS NO SCRIPT - UTILIDADE NOVAMENTE PARA ATIVARMOS ESSES DOIS MODOS CRIADOS FICANDO ASSIM AO MUDAR DE MODO EU POSSO ATIVAR O DEBUG MODE
+
+
+
+//SCRIPT - UTILIDADE
+
+
+#macro DEBUG_MODE 0
+
+#macro modo_normal:DEBUG_MODE 0
+#macro modo_debug:DEBUG_MODE 1
+
+
+
+
+AULA 30 A 60 - ESTADOS DO PLAYER E SCREENSHAKE
+
+//CREATE DO PLAYER
+
+BASICAMENTE REFORMULAMOS ALGUNS CODIGOS PARA FICAR MAIS FACIL DE TER LIBERDADE UM DELES FOI O "MOVIMENTO" E O "PEGA INPUT" E O "APLICA VELOCIDADE", 
+
+
+
+"MOVIMENTO" AGR ELE BASICAMENTE "CHECA" A COLISAO VERTICAL COM O OBJ PAREDE E A COLISAO HORIZONTAL COM O OBJ PAREDE
+
+"APLICA VELOCIDADE" ELE BASICAMENTE TOMA CONTA DA MOVIMENTAÇÃO DO PLAYER E ELE CHECA TB O CHAO E A VELCOIDADE ALEM DISSO ELE FAZ O PLAYER SOMENTE USAR O PULO 1 VEZ 
+
+
+O "PEGA INPUT" ELE PEGA SOMENTE AS TECLAS
+
+
+
+ALEM DISSO CRIAMOS ALGUMAS FUNCTIONS NOVAS
+
+
+"ajusta escala" ELA AJUSTA A ESCALA DO PLAYER FAZENDO ELE OLHAR NA DIREÇÃO CERTA
+
+
+"checa chão" ELE FAZ O CHAO SER IGUAL A MASCARA DE COLISAO DO PLAYER SER IGUAL A PAREDE TIRANDO O BUG DO PE DO PLAYER
+
+
+"troca sprite" BASICAMENTE COMO O NOME FIZ ELE TROCA A SPRITE DO PLAYER
+
+
+"acabou animação" ESSE CODIGO BASICAMENTE ELE FAZ A ANIMAÇÃO TERMINA ASSIM TIRANDO LOOPS
+
+
+
+
+
+//EFEITO SCREENSHAKE
+
+ALEM DISSO IMPORTAMOS O EFEITO DE "AMASSADO" DO JOGO DA NAVE PARA ESSE E MUDAMOS ELE PARA "screenshake" PEGAMOS A SCRIPT E O OBJ DESSE EFEITO E ADICIONAMOS DA SEGUINTE MANEIRA NO CREATE DO PLAYER DEMOS UM 
+
+
+//INICIANDO OS EFEITOS IMPORTADOS
+inicia_efeito_squash();
+
+
+
+NO PULO DEMOS ESSE EFEITO NO IF DO CHAO
+
+efeito squash
+
+
+E NO STEP DO PLAYER
+
+
+retorna_squash();
+
+
+
+ALEM DISSO DEMOS NO DRAW TB 
+
+
+desenha_efeito_squash();
+
+
+
+//OBJ SCREEN SHAKE
+
+
+
+//TREMENDO A TELA!!
+//ALTERANDO A POSIÇÃO X E Y DO VIEWPORT COM BASE NO VALOR DO TREME
+if (treme > 0.1)
+{
+	var _x = random_range(-treme, treme);
+	var _y = random_range(-treme, treme);		
+	//ALTERANDO A POSIÇÃO X DO VIEWPORT
+	view_set_xport(view_current, _x);
+	
+	view_set_yport(view_current, _y);
+
+
+}
+else //CHEGUEI PERTO DE ZERO, EU ZERO O VALOR DO TREME
+{
+	
+	treme = 0;
+	
+	
+	//GARANTO QUE A POSIÇÃO DA MINHA VIEW E ZERADA TAMBEM
+	view_set_xport(view_current, 0);
+	view_set_yport(view_current, 0);
+
+
+}
+
+
+
+
+
+
+//PARANDO DE TREMER DE POUQUINHO EM POUQUINHO
+treme = lerp(treme, 0, .1);
+
+
+
+
+//SCRIPT SHEENSHAKE
+
+
+function screenshake(_treme = 1)
+{
+	if (instance_exists(obj_screenshake))
+    {
+		with(obj_screenshake)
+	    {
+			//SE O TREME NOVO FOR MAIOR DO QUE EU ESTOU TREMENDO
+			//AI EU MUDO O VALOR DELE, CASO CONTRARIO EU NÃO FAÇO NADA
+			
+			if (_treme > treme)
+			{
+				
+			     treme = _treme;
+			}
+		
+		
+		}
+		
+	  
+	
+	}
+
+}
+
+
+
+
+//SCRIPT SQUASH_STRETCH
+
+
+
+function inicia_efeito_squash()
+{
+     //INICIANDO AS VARIAVEIS QUE EU VOU USAR
+     xscale = 1;
+     yscale = 1;
+
+
+
+}
+
+
+
+
+
+
+//ELE VAI DEFINIR QUAL O VALOR QUANDO O PLAYER "SE AMASSAR"
+function efeito_squash(_xscale = 1, _yscale = 1)
+{
+    xscale = _xscale;
+    yscale = _yscale;
+     
+
+
+}	
+
+function retorna_squash(_qtd = .1)
+{
+ 
+      xscale = lerp(xscale, 1, _qtd);
+      yscale = lerp(yscale, 1, _qtd);
+
+
+}
+
+function desenha_efeito_squash()
+{
+    
+    draw_sprite_ext(sprite_index, image_index, x, y, xscale, yscale, image_angle, image_blend, image_alpha);
+
+}
+
+
+
+
+ALEM DISSO ADICIONAMOS ISSO NO STEP DO PLAYER NO CASO CHAMAMOS ESSES CODIGOS FEITOS NO CREATE FICANDO ASSIM
+
+
+//STEP
+
+pega_input();
+movimento();
+checa_chao();
+ativa_debug();
+ajusta_escala();
+
+
+retorna_squash();
+
+
+//RODANDO O MEU ESTADO
+estado();
+
+
+
+ALEM DISSO CRIAMOS UM SCRIPT 
+
+
+//SCRIPT UTILIDADES
+
+
+//BASICAMENTE OS CODIGOS DAQUI PELO MENOS POR AGR A E TUDO DE DEBUG E SO 1 DE FPS
+
+
+
+
+#macro DEBUG_MODE 0
+
+#macro modo_normal:DEBUG_MODE 0
+#macro modo_debug:DEBUG_MODE 1
+
+#macro FPS game_get_speed(gamespeed_fps) //ESSE CODIGO ELE MEXE COM O FPS DO JOGO
+
+
+global.debug = false;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//APARTIR DAQUI E OS CODIGO DOS ESTADOS
+
+
+
+
+#region Métodos
+
+
+
+//METODO PARA PEGAR INPUTS
+pega_input = function()
+{
+    right = keyboard_check(vk_right) or keyboard_check(ord("D"));     
+    left  = keyboard_check(vk_left)  or keyboard_check(ord("A"));  
+    jump  = keyboard_check_pressed(vk_space);
+}
+
+
+
+
+//METODO DE MOVIMENTAÇÃO
+aplica_velocidade = function()
+{
+      //CHECANDO SE EU ESTOU NO CHAO
+      checa_chao();
+    
+    
+    
+    
+      //APLICANDO OS INPUTS NA VELH
+      velh = (right - left) * max_velh;
+    
+    
+    
+    
+    
+    //APLICANDO A GRAVIDADE
+    //SE EU ESTOU TOCANDO NO CHÃO EU APLICO A GRAVIDADE A MIHHA VELV
+    if (!chao)
+    {
+        velv += grav;
+    }
+    else 
+    {
+        velv = 0;
+    
+        
+        
+        //VOU ARREDONDAR A POSIÇÃO DO Y DELE
+        y = round(y);
+        //SE EU APERTEI ESPAÇO EU PULO
+	if (jump)
+        {
+           velv = -max_velv;
+         
+        }
+      
+
+    }
+
+    
+    
+    
+}
+
+
+
+
+
+
+
+
+
+ajusta_escala = function()
+{
+    if (velh != 0) 
+    {
+        image_xscale = sign(velh);
+    }	
+    
+}
+
+
+
+
+
+movimento = function()
+{
+    
+    //USANDO O  MOVE AND COLLIDE HORIZONTAL
+    move_and_collide(velh, 0, obj_parede, 4);
+    
+    
+    //USANDO O MOVE AND COLLIDE VERTICAL
+    move_and_collide(0, velv, obj_parede);
+     
+}
+
+
+
+
+
+
+checa_chao = function()
+{
+    chao = place_meeting(x, y + 1, obj_parede);
+}
+
+
+
+
+
+
+
+troca_sprite = function(_sprite = spr_parede)
+{
+    //CHECANDO SE EU AINDA NÃO ESTOU COM A SPRITE CORRETA
+    if (sprite_index != _sprite)
+    {
+        //TROCO A SPRITE
+        sprite_index = _sprite;
+        //ZERO A ANIMAÇÃO
+        image_index = 0;
+    }        
+    
+    
+    
+    
+}
+
+
+
+
+acabou_animacao = function()
+{
+    var _spd = sprite_get_speed(sprite_index) / FPS; //ESSE CODIGO ELE PEGA A VELOCIDADE DA SPRITE E A VELOCIDADE DA ROOM QUE FOI FEITA NA SCRIPT
+    if (image_index + _spd >= image_number)
+    {
+        
+        //TROQUEI O ESTADO
+        return true;
+    }    
+    
+}
+
+
+
+
+
+
+
+
+
+
+//CREATE DO PLAYER
+
+#region Estados
+
+
+//MÉTODO DOS ESTADOS
+estado_parado = function() //ESSE ESTADO AQUI E O ESTADO DE PARADO BASICAMENTE ESSE ESTADO ELE DEFINE SE O PLAYER ANDA OU PULA DE ACORDO COM A TECLA
+{
+    velv = 0;
+    velh = 0;
+    aplica_velocidade(); //ESSE CODIGO CHAMAMOS ELE PARA O PLAYER PULAR SOMENTE UMA VEZ E NÃO A TODO MOMENTO
+    
+    troca_sprite(spr_player_idle); //ESSE CODIGO AQUI EU FIZ UMA FUNÇÃO SO PARA MUDAR A SPRITE
+    
+    
+    
+    
+    if(right xor left)// SE EU APERTAR A OU D OU ESQUERDA E DIREITA EU ENTRO NO ESTADO DE ANDAR ENTÃO EU ANDO
+    {
+        
+        
+         estado = estado_movendo;
+        
+    }
+    
+    
+    //PULEI
+    if (jump) // SE EU APERTAR ESPAÇO QUE ESTA COMO O NOME "JUMP" EU ENTRO NO ESTADO DE PULAR ENTÃO EU PULO
+    {
+        
+        
+        estado = estado_pulo;
+        
+        instance_create_depth(x, y, depth - 1, obj_pulo_particula);
+        
+        
+        //EU ME ESTICO PARA CIMA
+        efeito_squash(.4, 1.6);
+    }
+    
+    
+    
+    
+}
+
+estado_movendo = function()
+{
+    
+    aplica_velocidade();//AQUI E UMA FUNÇÃO PARA FAZER O PLAYER ANDAR
+   
+     troca_sprite(spr_player_move);
+    
+    //VOLTANDO AO ESTADO PARADO
+    //SE EU NÃO ESTOU ME MOVENDO EU ESTOU PARADO
+    if (velh == 0) //AQUI EU ZEREI A VELOCIDADE QUANDO ESTOU PARADO
+    {
+        estado = estado_parado;
+        
+    }
+    
+    if(jump)
+    {   
+       
+        estado = estado_pulo;
+        instance_create_depth(x, y, depth - 1, obj_pulo_particula);
+    }    
+        
+        
+        
+         
+}
+
+estado_pulo = function()
+{
+   
+    aplica_velocidade();
+    
+    
+    
+    //SE EU ESTOU SUBINDO, MINHA VELV É NEGATIVA 
+    if(velv < 0)
+    {
+        troca_sprite(spr_player_jump_cima);
+        
+        
+    }
+    else //ESTOU CAINDO MINHA VELV É POSITIVA OU 0
+    {
+        troca_sprite(spr_player_jump_baixo);
+    }   
+    	
+    
+    
+    //SE EU TOQUEI NO CHÃO, EU NÃO ESTOU MAIS PULANDO
+    if (chao)
+    {
+        estado = estado_parado;
+        instance_create_depth(x, y, depth - 1, obj_pulo_pouso_particula);
+        
+        
+        //VOU FICAR MEIO ACHATADO
+        efeito_squash(1.5, 0.5);
+   
+    }
+    
+    
+    
+}
+
+
+//ESTADO INICIAL POWER UP
+estado_powerup_inicio = function()
+{
+    
+    troca_sprite(spr_player_powerup_inicio);
+    
+    //INDO PARA O MEIO DA ANIMAÇÃO
+    //QUANDO A ANIMAÇÃO DESSE ESTADO ACABOU, EU MUDO DE ESTADO 
+    if (acabou_animacao())
+    {
+        estado = estado_powerup_meio;
+    }        
+    
+    
+}
+
+//MEIO
+estado_powerup_meio = function()
+{
+    
+    troca_sprite(spr_player_powerup_meio);
+    
+    
+   if (acabou_animacao())
+    {
+        estado = estado_powerup_fim;
+    }        
+    
+}
+
+
+//FIM
+estado_powerup_fim = function()
+{
+    
+     troca_sprite(spr_player_powerup_fim);
+
+    if (acabou_animacao())
+    {
+        estado = estado_parado;
+    }        
+    
+
+
+}
+
+//ESTADO ENTRANDO NA TINTA
+estado_entrando_tinta = function()
+{
+    troca_sprite(spr_player_tinta_entrar);
+    
+    if (acabou_animacao())
+    {
+        estado = estado_saindo_tinta;
+    }
+    
+}
+
+
+//ESTADO SAINDO DA TINTA
+estado_saindo_tinta = function()
+{
+    troca_sprite(spr_player_tinta_saindo);
+    
+    if (acabou_animacao())
+    {
+        estado = estado_parado;
+    }
+}
+
+
+
+//DEFININDO O ESTADO INICIAL DO PLAYER
+estado = estado_parado;
+
+    
+   
+
+#endregion
+
+
+
+ 
+AULA 61 - AJUSTANDO A MASCARA DE COLISAO DO PLAYER
+
+BASICAMENTE PARA FAZERMOS ISSO VAMOS NO OBJ PLAYER NAS PROPERTIES DO PLAYER VAMOS EM COLISSION MASK E COLOCAMOS A DO IDLE "MAS PQ A DO IDLE" PQ ELA E ONDE TA MAIS AJUSTADA A COLISÃO PODIA SER QUALQUER OUTRA MAS ESSA TA MAIS "CERTA" ISSO EVITA BUGS COM A COLISÃO 
+
+
+
+
+
+AULA 62 - ARRUMANDO A ESCALA DO PLAYER
+
+NESSA AULA VAMOS "ARRUMAR" UM BUG QUE NAO TAVA FAZENDO O PLAYER VIRAR PARA DIREÇÃO CORRETA
+
+
+VAMOS CRIAR UMA VARIAVEL
+
+
+//CREATE DO PLAYER
+
+
+
+
+//DIREÇÃO QUE EU ESTOU OLHANDO 
+dir = 1;
+
+
+
+
+DPS VAMOS MODIFICAR NOSSA FUNCTION AJUSTA ESCALA
+
+
+
+
+ajusta_escala = function()
+{
+    if (velh != 0) 
+    {
+        dir = sign(velh); //AQUI ADICIONAMOS O DIR CRIADO LA EM CIMA
+    }	
+    
+}
+
+
+
+DPS VAMOS NO DRAW DO PLAYER PARA DESENHAR A SPRITE
+
+
+
+//EU MESMO VOU ME DESENHAR
+draw_sprite_ext(sprite_index, image_index, x, y, xscale * dir, yscale, image_angle, image_blend, image_alpha);//AQUI MULTIPLICAMOS O XSCALE POR DIR
+
+
+
+
+
+
+AULA 63 a 66 - CRIANDO O ESTADO NA TINTA
+
+
+VAMOS CRIAR MAIS 2 OBJETOS UM CHAMADO "obj_tinta_entrar_particula" E O OUTRO CHAMADO "obj_tinta_sair_particula"
+
+APOS FIZERMOS ISSO VAMOS CRIAR UM ANIMATION END EM AMBOS OS OBJETOS E COLOCAR UM "instance_destroy();" EM CADA 1
+
+DPS VAMOS IMPORTA A SPRITE DE AMBOS E COLOCAR NOS OBJETOS, APOS ISSO VAMOS NO CREATE DO PLAYER PARA CRIAR A TECLA DE ENTRAR NA TINTA E PARA CRIAR OS ESTADOS DAS TINTAS
+
+
+
+
+
+
+
+
+
+//CREATE DO PLAYER
+
+
+
+VAMOS NAS VARIAVEIS DE INPUTS  E VAMOS ADICIONAR O INPUT PAINT
+paint =  false;
+
+
+
+APOS ISSO VAMOS NA "region" DE ESTADOS E LA VAMOS CRIAR NOSSOS ESTADOS DE TINTA
+
+
+
+//ESTADO ENTRANDO NA TINTA
+estado_entrando_tinta = function()
+{
+    troca_sprite(spr_player_tinta_entrar);
+    
+    if (acabou_animacao())
+    {
+        estado = estado_tinta_loop;
+    }
+    
+}
+
+estado_tinta_loop = function()
+{   
+ 
+    troca_sprite(spr_player_tinta_loop);
+    aplica_velocidade();
+    
+     if(paint)
+    {
+        estado = estado_saindo_tinta;
+        //CRIANDO AS PARTICULAS
+        instance_create_depth(x, y, depth -1, obj_tinta_sair_particula); //AQUI CHAMAMOS OS OBJETOS QUE CRIAMOS LA EM 	CIMA
+    }
+    
+    
+
+}
+
+
+
+//ESTADO SAINDO DA TINTA
+estado_saindo_tinta = function()
+{
+    troca_sprite(spr_player_tinta_saindo);
+    
+    
+    if (acabou_animacao())
+    {
+        estado = estado_parado;
+    }
+    
+}
+
+
+
+APOS FIZERMOS ISSO TAMBEM VAMOS ADICIONAR NOSSO INPUT NO ESTADO_PARADO FICANDO O CODIGO ASSIM
+
+//MÉTODO DOS ESTADOS
+estado_parado = function() //ESSE ESTADO AQUI E O ESTADO DE PARADO BASICAMENTE ESSE ESTADO ELE DEFINE SE O PLAYER ANDA OU PULA DE ACORDO COM A TECLA
+{
+    velv = 0;
+    velh = 0;
+    aplica_velocidade(); //ESSE CODIGO CHAMAMOS ELE PARA O PLAYER PULAR SOMENTE UMA VEZ E NÃO A TODO MOMENTO
+    
+    troca_sprite(spr_player_idle); //ESSE CODIGO AQUI EU FIZ UMA FUNÇÃO SO PARA MUDAR A SPRITE
+    
+    
+    
+    
+    if(right xor left)// SE EU APERTAR A OU D OU ESQUERDA E DIREITA EU ENTRO NO ESTADO DE ANDAR ENTÃO EU ANDO
+    {
+        
+        
+         estado = estado_movendo;
+        
+    }
+    
+    
+    //PULEI
+    if (jump) // SE EU APERTAR ESPAÇO QUE ESTA COMO O NOME "JUMP" EU ENTRO NO ESTADO DE PULAR ENTÃO EU PULO
+    {
+        
+        
+        estado = estado_pulo;
+        
+        instance_create_depth(x, y, depth - 1, obj_pulo_particula);
+        
+        
+        //EU ME ESTICO PARA CIMA
+        efeito_squash(.4, 1.6);
+    }
+    
+     if(paint) //AQUI O INPUT QUE ADICIONAMOS LA EM CIMA 
+    {
+        estado = estado_entrando_tinta;
+        instance_create_depth(x, y, depth - 1, obj_tinta_entrar_particula);//AQUI UM DOS OBJETOS QUE CRIAMOS 
+    }
+    
+    
+
+
+
+   
+AULA 67 A 68 - MELHORANDO O CODIGO DA TINTA
+
+
+NA AULA 67 ELE COLOCOU PARA A TINTA AO SE MOVER NAO PODER SAIR DELA POIS ESTAVA BUGADO E AO ENTRAR TB ALEM DISSO ELE COLOCOU AO INVES DE FICAR "CHAMANDO O CODIGO DE PARTICULA" O TEMPO TODO BASTA SO CHAMAMOS DIRETAMENTE O OBJ PARTICULA
+
+
+
+NA AULA 68 ELE BASICAMENTE FEZ QUE A TINTA SE ELA CHECAR A COLISAO PROXIMO DA BORDA DA "PAREDE" O PLAYER NO ESTADO DE TINTA NÃO SE MOVE O CODIGO FICOU ASSIM
+
+
+
+ALEM DISSO NO ESTADO PARADO ADICIONAMOS O "PAINT LA FICANDO O CODIGO ASSIM 
+
+
+
+
+
+estado_parado = function() //ESSE ESTADO AQUI E O ESTADO DE PARADO BASICAMENTE ESSE ESTADO ELE DEFINE SE O PLAYER ANDA OU PULA DE ACORDO COM A TECLA
+{
+    velv = 0;
+    velh = 0;
+    aplica_velocidade(); //ESSE CODIGO CHAMAMOS ELE PARA O PLAYER PULAR SOMENTE UMA VEZ E NÃO A TODO MOMENTO
+    
+    troca_sprite(spr_player_idle); //ESSE CODIGO AQUI EU FIZ UMA FUNÇÃO SO PARA MUDAR A SPRITE
+    
+    
+    
+    
+    if(right xor left)// SE EU APERTAR A OU D OU ESQUERDA E DIREITA EU ENTRO NO ESTADO DE ANDAR ENTÃO EU ANDO
+    {
+        
+        
+         estado = estado_movendo;
+        
+    }
+    
+    
+    //PULEI
+    if (jump) // SE EU APERTAR ESPAÇO QUE ESTA COMO O NOME "JUMP" EU ENTRO NO ESTADO DE PULAR ENTÃO EU PULO
+    {
+        
+        
+        estado = estado_pulo;
+        
+        instance_create_depth(x, y, depth - 1, obj_pulo_particula);
+        
+        
+        //EU ME ESTICO PARA CIMA
+        efeito_squash(.4, 1.6);
+    }
+    //SE EU NÃO ESTOU TOCANDO NO CHAO
+    //EU ESTOU NO ESTADO DE PULO
+    if (!chao)
+    {
+        estado = estado_pulo;
+    }
+    
+    
+    
+    if(paint)
+    {
+        estado = estado_entrando_tinta;  //AQUI O PAINT QUE CHAMAMOS 
+        
+    }
+    
+    
+}
+
+DPS DE ADICONAMOS O PAINT VAMOS NO ESTADO ENTRANDO TINTA E LA COLOCAMOS PARA ZERAR O VELH AO ENTRAR NA TINTA DPS VAMOS CHAMAR A PARTICULA DIRETAMENTE
+
+
+
+
+//ESTADO ENTRANDO NA TINTA
+estado_entrando_tinta = function()
+{
+    velh = 0; //ZERANDO O VELH AO ENTRAR NA TINTA 
+    
+    troca_sprite(spr_player_tinta_entrar);
+    
+    
+    //SE A MINHA PARTICULA NÃO EXISTE EU CRIO ELA     
+    if (!instance_exists(obj_tinta_entrar_particula)) AQUI SE O OBJ TINTA ENTRAR EXISTE ENTAO CHAMAMOS ELE
+    {
+        //CRIO A MINHA PARTICULA
+        instance_create_depth(x, y, depth - 1, obj_tinta_entrar_particula);
+        
+    }
+    
+    
+    
+    if (acabou_animacao())
+    {
+        estado = estado_tinta_loop;
+    }
+    
+}
+
+
+
+
+NESSE ESTADO ABAIXO O TINTA LOOP OQ FIZEMOS FOI BASICAMENTE CRIAR UMA VARIAVEL TEMPORARIA LA COLOCAMOS QUE A MASCARA DE COLISÃO BASEADA NA DO "PLAYER IDLE" VAI SER O CODIGO ABAIXO APOS ISSO ZERAMOS A VELOCIDADE 
+
+
+estado_tinta_loop = function()
+{   
+ 
+    troca_sprite(spr_player_tinta_loop);
+    aplica_velocidade();
+    
+     
+    //SE A MINHA FRENTE EMBAIXO DE MIM NÃO TIVER CHAO EU ZERO MINHA VELOCIDADE
+    var _parar = !place_meeting(x + (velh * 18), y + 1, obj_parede); 
+    if (_parar)
+    {
+        velh = 0;
+    }
+    
+    
+    if(paint)
+    {
+        estado = estado_saindo_tinta;
+        //CRIANDO AS PARTICULAS
+        instance_create_depth(x, y, depth -1, obj_tinta_sair_particula);
+    
+        
+    }
+   
+}
+
+
+NO CODIGO ABAIXO ZERAMOS A VELOCIDADE AO SAIR DA TINTA EVITANDO BUGS FICANDO O CODIGO ASSIM
+
+
+//ESTADO SAINDO DA TINTA
+estado_saindo_tinta = function()
+{
+    velh = 0; //ZERANDO O VELH AO SAIR DA TINTA
+    
+    troca_sprite(spr_player_tinta_saindo);
+    
+    
+    if (acabou_animacao())
+    {
+        estado = estado_parado;
+    }
+    
+}
+
+
+
+
+
+
+AULA 70 - IMPORTANDO TILE SET
+
+
+BASICAMENTE NESSE AULA ELE FALA SOBRE OS TILE SET COMO IMPORTAR UM E SEMPRE DEIXAR 1 PIXEL FORA DO TILE PQ O GAME MAKER SEMPRE COME 1 PIXEL PARA SABER OQ E O TILE ENTÃO VAMOS NO NOSSO TILE SET E VAMOS EM SIZE E VAMOS EM REZISE CANVAS DPS CLICKAMOS PARA A DIREITA NA SETINHA E DPS DEMOS O WIDTH PARA 528 PARA ASSIM O GAME MAKER COMER 1 PIXEL E NAO O TILE 
+
+
+
+
+
+
+AULA 71 a 72 - AUTO TILE
+
+
+NESSAS AULAS BASICAMENTE ELE MOSTRA UM SISTEMA DE TILE AUTOMATICO EU COLOCO OS TILES NA ORDEM DPS SO CLICKO NESSA OPÇÃO QUE EU FIZ NAS "ORDENS" E SO METO NA TELA QUE ELE SE ADAPTA DE ACORDO COM O CENARIO
+
+
+CRIO UM TILESET DPS COLOCO A SPRITE DOS TILE SET DPS VOU EM AUTO TILING DPS LA CRIO UM "LIBRARY" DPS EU COLOCO TUDO NA ORDEM CORRETA DPS CRIO UMA LAYER DE TILESET E LA EU COLOCO A SPRITE DO TILESET Q EU QUERO E DPS VOU EM LIBRARIES E LA EU CHAMO A LIBRARIES Q EU CRIEI DPS SO COLOCAR NA ROOM
+
+
+
+
+
+AULA 73 A 74 - COLISAO POR TILE
+
+
+PRIMEIRO VAMOS COLOCAR A LAYER DO TILESET PARA FICAR ABAIXO DO PLAYER
+
+
+
+DPS VAMOS NO CRATE DO OBJ PLAYER E CRIAMOS LA UMA NOVA VARIAVEL PARA COLOCARMOS A COLISAO COM O TILE
+
+
+
+//CREATE OBJ PLAYER
+
+
+//VARIAVEL COM A MINHA LISTA DE COLISOES
+//PEGANDO A MINHA LAYER
+var _layer = layer_tilemap_get_id("tl_level");
+colisoes = [obj_parede, _layer];
+
+
+
+
+DPS VAMOS NOS NAS 3 FUNCOES QUE UTILIZAM COLISAO E MUDAMOS PARA A NOSSA NOVA VARIAVEL FICANDO O CODIGO ASSIM
+
+movimento = function()
+{
+    
+    //USANDO O  MOVE AND COLLIDE HORIZONTAL
+    move_and_collide(velh, 0, colisoes, 4);
+    
+    
+    //USANDO O MOVE AND COLLIDE VERTICAL
+    move_and_collide(0, velv, colisoes, 24);
+     
+}
+
+
+
+
+
+
+checa_chao = function()
+{
+    chao = place_meeting(x, y + 1, colisoes);
+}
+
+
+
+TAMBEM ADICIONAMOS NESSE ESTADO TB O COLISOES
+
+estado_tinta_loop = function()
+{   
+ 
+    troca_sprite(spr_player_tinta_loop);
+    aplica_velocidade();
+    
+     
+    //SE A MINHA FRENTE EMBAIXO DE MIM NÃO TIVER CHAO EU ZERO MINHA VELOCIDADE
+    var _parar = !place_meeting(x + (velh * 18), y + 1, colisoes); //ADICIONAMOS AQUI
+    if (_parar)
+    {
+        velh = 0;
+    }
+    
+    
+    if(paint)
+    {
+        estado = estado_saindo_tinta;
+        //CRIANDO AS PARTICULAS
+        instance_create_depth(x, y, depth -1, obj_tinta_sair_particula);
+    
+        
+    }
+   
+}
+
+
+
+
+
+
+
+
+
+
+
+NA AULA 74 ELE BASICAMENTE SO PEDE PRA A GENTE COLOCAR OS TILE DO FUNDO NO SISTEMA DE LIBRARY
+
+
+
+
+AULA 75 a 78 - MONTANDO O LEVEL
+
+ NESSAS AULAS ELE BASICAMENTE MONTA O LEVEL DPS ELE AJUSTA UM BUG DE QUANDO O PLAYER ESTAVA CAINDO ENQUANTO ANDAVA NAO ENTRAVA NO ESTADO DE "PULO CAINDO" ENTÃO ADICIONAMOS ESSE CODIGO NO ESTADO MOVENDO NO CREATE DO OBJ PLAYER
+
+
+FICANDO O CODIGO ASSIM
+ 
+
+estado_movendo = function()
+{
+    
+    aplica_velocidade();//AQUI E UMA FUNÇÃO PARA FAZER O PLAYER ANDAR
+   
+     troca_sprite(spr_player_move);
+    
+    //VOLTANDO AO ESTADO PARADO
+    //SE EU NÃO ESTOU ME MOVENDO EU ESTOU PARADO
+    if (velh == 0) //AQUI EU ZEREI A VELOCIDADE QUANDO ESTOU PARADO
+    {
+        estado = estado_parado;
+        
+    }
+    
+    if(jump)
+    {   
+       
+        estado = estado_pulo;
+        instance_create_depth(x, y, depth - 1, obj_pulo_particula);
+    }    
+     
+     if (!chao) //ADICIONAMOS AQUI O CODIGO PARA TIRAR O BUG MENCIONADO
+    {
+        estado = estado_pulo;
+    }
+    
+    
+    
+  
+       
+    if (paint)
+    {
+        estado = estado_entrando_tinta;
+    }   
+   
+}
+
+
+
+
+AULA 79 - FAZENDO A CAMERA SEGUIR O JOGADOR 
+
+
+VAMOS NA ROOM EM VIEWPORT 0 VAMOS NA OPÇÃO "OBJECT FOLLOWING" CLICKAMOS LA E COLOCAMOS O OBJ PLAYER PARA A CAMERA SEGUIR
+
+
+
+APOS FAZEMOS ISSO ELE EXPLICA UM POUCO QUE A "CAMERA IDEAL OU MELHOR" SERIA COLOCARMOS POIS ELA NAO VAI TANTO PRA FRENTE E AO MESMO TEMPO NAO ACOMPANHA O PLAYER O TEMPO TODO ESSA OPÇÃO ABAIXO FICA "ABAIXO" DO "OBJECT FOLLOWING"
+
+HORIZONTAL BORDER 110
+
+VERTICAL BORDER 60
+
+
+
+
+
+
+AULA 80 - BLIND JUMP E SOFT LOCK
+
+
+NESSA AULA ELE EXPLICA SOBRE OQ E BLIND JUMP VOU DA EXEMPLOS UTILIZANDO O GEMINI DO QUE ISSO SE TRATA
+
+
+1. Blind Jump (Salto Cego)
+O Blind Jump acontece em jogos de plataforma quando o jogador é forçado a pular para uma área que ele não consegue ver. Ele pula "no escuro", sem saber se haverá uma plataforma, um inimigo ou um buraco mortal embaixo dele.
+
+Por que é ruim? Porque o sucesso do jogador depende de sorte ou de ele já ter morrido ali antes para aprender o caminho (tentativa e erro), e não da habilidade de reação.
+
+Como evitar: Designers usam "moedas" ou trilhas de itens para guiar o pulo, ou permitem que a câmera se mova para baixo quando o jogador se agacha.
+
+2. Soft Lock
+O Soft Lock é um estado onde o jogo não travou (você ainda consegue andar e mexer nos menus), mas é impossível progredir ou sair de onde você está. Você está "preso" logicamente.
+
+Exemplos comuns:
+
+Cair em um buraco de onde não dá para pular para fora e não há nada para te matar.
+
+Salvar o jogo exatamente um frame antes de levar um tiro mortal (entrando em um ciclo infinito de morte).
+
+Gastar um item de missão (chave) em uma porta errada e não ter como conseguir outra.
+
+
+
+
+
+AULA 81 - LIMITANDO A VELOCIDADE DE QUEDA DO PLAYER
+
+VAMOS LIMITAR A VELOCIDADE DE QUEDA DO PLAYER POIS ESTAVA MT RAPIDO
+
+
+
+PRIMEIRO EXEMPLO DE COMO FAZER ISSO
+
+if (velv > max_velv) velv = max_velv;
+if (velv < -max_velv) velv = -max_velv;
+
+
+
+
+
+OUTRO EXEMPLO E UTILIZANDO O CLAMP
+
+
+velv = clamp(velv, -max_velv, max_velv);
+
+
+
+AULA 82 - INICIANDO AS DECORAÇÕES
+
+
+
+BASICAMENTE IMPORTAMOS 3 SPRITES A JANELA GRANDE, JANELA PEQUENA, E TOCHA DPS, CRIAMOS UMA LAYER DE ASSETS DEMOS O NOME DE DECORACOES E COLOCAMOS ESSA SPRITES LA E ESSA LAYER ATRAS DO PLAYER
+
+
+
+
+
+
+
+
+
+AULA 83  - EFEITO DE LUZ 
+
+
+NA AULA 83 ELE ENSINA COMO COLOCAR UM "EFEITO DE LUZ" UTILIZANDO SPRITE MESMO SEM CODIGO
+
+
+
+
+AULA 84  A 86 - INICIANDO O BRILHO DA TOCHA
+
+
+
+VAMOS CRIAR UMA NOVA SPRITE E COLOCA O NOME DELA DE "spr_brilho_tocha" DPS COLOCAMOS A ALTURA E LARGURA DELA PARA 256 DPS DISSO VAMOS EM EDIT IMAGE E LA CRIAMOS UMA BOLA BRANCA GRANDE E DPS VAMOS EM EFFECTS O "EFFECTS" FICA NA PARTE SUPERIOR DO GAME MAKER CLICKAMO LA NO EFFECTS VAMOS NA OPÇÃO BLUR DPS VAMOS NA OPÇÃO DENTRO DO BLUR CHAMADA "BOX" DPS NA INTENSITY COLOCAMOS EM 20 
+
+
+
+
+CASO QUISERMOS DA MAIS EFEITO A ESFERA CLICKAMOS NO "DEFAUT" DA SPRITE DUAS VEZES E LA TEM APARECE OS EFEITOS "EXTRAS"
+
+
+DPS VAMOS EM IMAGE LA NA PARTE SUPERIOR DO GAMEMAKER CLICKAMOS LA VAMOS NA OPÇÃO DE AUTO TRIM ALL FRAMES PARA REMOVERMOS A BORDAS DE ONDE SOBROU ESPAÇO DA ESFERA DPS COLOCAMOS A ESFERA PARA O MIDDLE CENTRE 
+
+
+
+DPS VAMOS CRIAR UM OBJ CHAMADO "obj_tocha" DPS VAMOS DA A SPRITE DA TOCHA AO OBJ
+
+
+
+DENTRO DO OBJ TOCHA VAMOS CRIAR UM DRAW SOQ NAO VAMOS USAR O DRAW SELF PARA SE DESENHAR VAMOS SO DESENHAR SOMENTE A SPRITE PARA TER SOMENTE O EFEITO DE LUZ
+
+DPS VAMOS ADICIONAR O EFEITO DE LUZ UTILIZANDO O GPU E VAMOS COLOCAR NA NOSSA XSCALE E YSCALE DO CODIGO UM RANDOM_RANGE PARA DA UMA ASPECTO DE LUZ SUBINDO E DESCENDO
+
+
+
+UM ADENDENDO AS GRADES DAS DECORAÇOES DEIXAMOS E 16X16 E NOS ENFEITES TB
+
+
+
+//DRAW OBJ_TOCHA
+
+
+//VARIANDO A XSCALE E YSCALE DA TOCHA
+var _esc = random_range(0, 0.02);
+
+//EFEITO DE LUZ OU ILUMINAÇÃO
+gpu_set_blendmode(bm_add);
+
+
+
+//DESENHANDO MEU BRILHO
+draw_sprite_ext(spr_brilho_tocha, 0, x, y, 0.3 + _esc, 0.3 + _esc, 0, c_white, 0.5);
+
+
+//FINALIZANDO O EFEITO DE LUZ POIS SO QUEREMOS QUE SEJA ATIVADO SOMENTE AQUI
+gpu_set_blendmode(bm_normal);
+
+
+
+
+
+
+APOS ISSO COLOCAMOS ESSE OBJ TOCHA NA FRENTE DA TOCHA QUE ESTA NO ASSET DE "DECORACOES" FICANDO UM EFEITO DE LUZ 
+
+
+
+
+
+
+
+AULA 87 A 91- INICIANDO AS PARTICULAS DA TOCHA
+
+
+BASICAMENTE NESSAS AULAS ELE EXPLICOU OS FUNDAMENTOS DE "PARTICLE SYSTEMS" ELE EXPLICA QUE PODEMOS DA UMA IMAGEM DE ALGO PARA "SABERMOS" ONDE COLOCAR O EFEITO ALEM DEQ DA PRA MEXER EM COR TAMANHO FORMATO VELOCIDADE FREQUENCIA ETC
+
+
+
+
+APOS ISSO VAMOS CRIAR NOSSA PARTICLE VAMOS NO SIMBOLO DE + CLICKAMOS LA E COMEÇAMOS
+
+
+
+APOS ISSO VAMOS DENTRO DE PARTICLE SYSTEM VAMOS CLICKAR NO QUADRADO VAMOS COLOCAR NOSSO WIDTH E HEIGHT PARA SER IGUAL AO DA TOCHA ENTÃO VAI FICAR WIDTH 6 E HEIGHT 18 DPS COLOCAMOS A IMAGE PARA SER O DA TOCHA DPS DE FAZER ISSO VAMOS AJUSTAR A ESCALA DA TOCHA PARA FICAR ONDE FICA O FOGO, E DPS VAMOS MODIFICAR NOSSA TOCHA 
+
+
+MODE: STREAM
+
+PARTICLE COUNT: -5
+
+DELAY: MIN : 1 MAX : 1
+
+
+INTERVAL: MIN : 5  MAX: 10
+
+TEXTURES: FLARE
+
+
+COLOUR : FFCC65 , E56244 FF0000
+
+ADDTIVE: TRUE
+
+
+LIFE 
+
+MINIMUM : 60
+
+MAXIMUM : 120
+
+
+SCALE
+
+X : 0.05 
+Y : 0.05
+
+
+SIZE
+
+MINIMUM    : 1
+MAXIUM     : 1
+INCREMENTE : -0.01
+WIGGLE     : 0
+
+
+SPEED
+
+MINIXUM     : 0.1
+MAXIUM      : 0.1
+INCREMENT   : 0.01
+WIGGLE      : 0.1
+
+
+
+O RESTANTE DEIXEI NORMAL E COLOQUEI ESSA PARTICULA EM CIMA DO OBJECT TOCHA APOS ISSO EU CHAMEI ESSA PARTICULA PARA TODAS AS TOCHAS 
+
+
+
+//CREATE DO OBJECT TOCHA
+
+
+ps = part_system_create(ps_brilho_chamas);
+
+
+part_system_position(ps, x, y);
+
+
+
+
+
+
+AULA 93 A 94 - IMPORTANDO AS PLATAFORMAS
+
+
+AQUI A GENTE IMPORTOU O RESTO DOS ITENS DOS LEVELS E COLOCAMOS ELES COMO OBJECTS NO CASO IMPORTAMOS O "CAVALHETE, A PLATAFORMA GRANDE E A PLATAFORMA PEQUENA, E O DADO"
+
+
+
+
+
+
+
+
+AULA 95 - CRIANDO AS COLISOES DAS PLATAFORMAS
+
+
+NESSA AULA ELE BASICAMENTE COLOCA TODOS OS OBJETOS QUE EU QUERO COLISAO COMO FILHO DO OBJ PAREDE
+
+
+
+
+
+AULA 96 A 99 - ESTICANDO O ANDAIME E O CAVALETE E O CAVALETES
+
+BASICAMENTE NESSAS AULAS ELE ENSINA A USAR O NINE SLICE DA SEGUINTE MANEIRA DEFINIMOS ONDE QUEREMOS O NINE SLICE E LOGO DPS DEMOS UM REAPT PARA ASSIM REPETIR O OBJETO DA MANEIRA CORRETA SEM REPETIR TUDO UM EXEMPLO QUERO Q SO REPITA A PARTE DEBAIXO DO OBJETO ENTÃO SO VAI REPETIR ISSO
+
+
+
+AULA 100 A 102 - CRIANDO A PLATAFORMA ONE WAY
+
+
+BASICAMENTE NA AULA 100 A GENTE AJUSTOU OS ANDAIMES NO CASO A COLISAO DELES E DPS CRIAMOS UM OBJ "obj_parede_oneway" DPS COLOCAMOS QUE O ANDAIME SÃO FILHO DESSE OBJ DPS DISSO VAMOS NO CREATE DO OBJ PLAYER ADICIONAR ESSE "obj" nas "colisões"
+
+ 
+//CREATE DO OBJ PLAYER
+
+//VARIAVEL COM A MINHA LISTA DE COLISOES
+//PEGANDO A MINHA LAYER
+var _layer = layer_tilemap_get_id("tl_level");
+colisoes = [obj_parede, _layer, obj_parede_oneway];
+
+
+NA AULA 101 E 102 
+
+BASICAMENTE PEGAMOS NOSSO ONE WAY E COLOCAMOS ELE NO ESTADO DE PULO PARA QUANDO ELE PULAR UM "ANDAIME" OU CHAO FINO "FLUTUANTE" ELE ATRAVESSAR ELE E FICAR EM CIMA DELE ENTÃO PARA FAZERMOS ISSO VAMOS FAZER O SEGUINTE VAMOS NO ESTADO PULO E ADICIONAMOS O CODIGO
+
+EU COLOQUEI O ESTADO PULO TODO POREM SO MEXEMOS EM DUAS COISAS VOU CITAR ESSAS COISAS ABAIXO
+
+
+
+estado_pulo = function()
+{
+   
+    aplica_velocidade();
+    
+   
+    
+    
+    
+    
+    //SE EU ESTOU SUBINDO, MINHA VELV É NEGATIVA 
+    if(velv < 0)
+    {
+        troca_sprite(spr_player_jump_cima);
+        colisoes[2] = obj_parede; //AQUI A GENTE TIROU O "OBJ ONE WAY" DA LISTA DE COLISAO E COLOCAMOS O OBJ PAREDE
+        
+    }
+    else //ESTOU CAINDO MINHA VELV É POSITIVA OU 0
+    {
+        troca_sprite(spr_player_jump_baixo);
+       
+        //ADICIONANDO O PAREDE ONE WAY A LISTA DE COLISAO
+        if(!place_meeting(x, y, obj_parede_oneway)) //AQUI ADICIONAMOS O OBJ ONE WAY PARA QUANDO ATRAVESSAR E DPS 	"CAIR ELE CONSEGUIR COLIDIR COM O OBJ ONE WAY"
+        {
+            colisoes[2] = obj_parede_oneway;
+        }
+    
+    }   
+    	
+    
+    
+    //SE EU TOQUEI NO CHÃO, EU NÃO ESTOU MAIS PULANDO
+    if (chao)
+    {
+        estado = estado_parado;
+        instance_create_depth(x, y, depth - 1, obj_pulo_pouso_particula);
+        
+        
+        //VOU FICAR MEIO ACHATADO
+        efeito_squash(1.5, 0.5);
+   
+    }
+    
+    
+    
+}
+
+
+AULA 103 A 105 - MELHORANDO O CODIGO DA PLATAFORMA
+
+
+
+BASICAMENTE NESSAS AULAS ELE MELHOROU O CODIGO FEITO NAS AULAS 101 A 102 REFINOU COMO O PLAYER REAGE AS "PLATAFORMAS FINAS" UTILIZANDO ARRAYS OU "LISTAS" "UM ADENDO TB COLOMOS A LAYER DO PLAYER PARA FICAR ACIMA DO LEVEL"
+
+
+
+estado_pulo = function()
+{
+   
+    aplica_velocidade();
+    
+   
+    
+    
+    
+    
+    //SE EU ESTOU SUBINDO, MINHA VELV É NEGATIVA 
+    if(velv < 0)
+    {
+        troca_sprite(spr_player_jump_cima);
+        //REMOVENDO O PAREDE ONE WAY DA LISTA
+       
+        
+        if (array_contains(colisoes, obj_parede_oneway))
+        {
+             
+            //REMOVENDO O PAREDE ONE WAY DAS MINHAS COLISOES
+            //ACHANDO A POSIÇÃO PAREDE ONE WAY
+            var _ind = array_get_index(colisoes, obj_parede_oneway);
+            //DELETANDO O MEU MANO ONE WAY DO ARRAY
+            array_delete(colisoes, _ind, 1);
+                
+        }
+        
+    }
+    else //ESTOU CAINDO MINHA VELV É POSITIVA OU 0
+    {
+        troca_sprite(spr_player_jump_baixo);
+        //ADICIONANDO O PAREDE ONE WAY A LISTA DE COLISAO
+         
+    
+        if(!place_meeting(x, y, obj_parede_oneway))
+        {
+            
+            //CHECANDO SE O PAREDE ONE WAY NÃO ESTA NO MEU ARRAY
+            if (!array_contains(colisoes, obj_parede_oneway))
+            {
+                array_push(colisoes, obj_parede_oneway);
+            }    
+                
+            
+            
+        }
+        
+        
+    }   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
