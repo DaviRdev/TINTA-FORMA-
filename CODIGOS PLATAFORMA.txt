@@ -2099,6 +2099,728 @@ estado_pulo = function()
 
 
 
+AULA 106 a 108 - INICIANDO O ITEM POWER UP
+
+NA AULA 106  ELE BASICAMENTE ELE AJUSTOU A MASCARA DE COLISAO DO PLAYER E DE ALGUNS OBJETOS DOS LEVELS DO PLAYER ELE COLOCOU A MASCARA DE COLISAO APARTIR DA CABEÇA DO PLAYER E NOS LEVELS NOS ANDAIMES ELE COLOCOU PARA A COLISAO SER NA "MADEIRA DO ANDAIME" E NÃO NA SOMBRA DELE
+
+
+NA AULA 107 E 108 CRIAMOS UM OBJETO CHAMADO OBJ POWER UP DPS DISSO NOS FORMOS NO PLAYER E ADICIONAMOS UMA FUNÇÃO NOVA PARA QUANDO O PLAYER COLIDIR COM O OBJETO ATIVAR O POWER UP, APOS ISSO FORMOS NO OBJETO E ATIVAMOS ESSE CODIGO LA NA COLISAO DELE COM O PLAYER FICANDO O CODIGO ASSIM.
+
+
+
+
+//STEP DO PLAYER 
+
+
+
+
+//PEGANDO O POWER UP
+pega_powerup = function()
+{
+    estado = estado_powerup_inicio;
+}
+
+
+
+
+//COLISAO DO PLAYER COM O OBJETO POWER UP
+
+instance_destroy();
+
+
+other.pega_powerup();
+
+
+
+
+
+AULA 109 A 110 - PARANDO AO PEGAR O POWER UP E FAZENDO O POWER UP SUBIR NA CABEÇA DO PLAYEY
+
+
+NO ESTADO "INICIO" DO POWER UP VAMOS ZERAR A MOVIMENTAÇÃO PARA O PERSONAGEM NÃO ANDAR QUANDO ENTRAR NESSE ESTADO FICANDO ASSIM
+
+
+
+//STEP DO PLAYER
+
+
+//ESTADO INICIAL POWER UP
+estado_powerup_inicio = function()
+{
+    
+    troca_sprite(spr_player_powerup_inicio);
+    
+    //FICANDO PARADO  //AQUI FOI ONDE ZERAMOS A "MOVIMENTAÇÃO"
+    velh = 0;
+    
+    //INDO PARA O MEIO DA ANIMAÇÃO
+    //QUANDO A ANIMAÇÃO DESSE ESTADO ACABOU, EU MUDO DE ESTADO 
+    if (acabou_animacao())
+    {
+        estado = estado_powerup_meio;
+    }        
+    
+    
+}
+
+
+
+DPS DISSO VAMOS AGR NO OBJ POWER UP PARA COLOCAMOS AO COLIDIR COM O PLAYER/ALVO O OBJ FICAR NA CABEÇA DO PLAYER
+
+
+//NO CREATE DO OBJ POWER UP VAMOS FAZER O SEGUINTE VAMOS CRIAR UMA VARIAVEL E UMA FUNCTION Q VAI FUNCIONAR ASSIM VAMOS DEFINIR O ALVO COMO NOONE E DPS VAMOS CRIAR UMA FUNCTION CHAMADA MOVENDO DENTRO DESSA FUNCTION VAMOS DEFINIR UM CODIGO QUE SE O ALVO FOR "TRUE" ELE VAI RODA O CODIGO NORMALMENTE E SE ELE FOR "FALSE" ELE NAO IRA RODAR O CODIGO ELE VAI RETORNAR
+
+
+//OBJ POWER UP - CREATE
+
+
+
+//IDENTIFICANDO QUEM É O PLAYER
+alvo = noone;
+
+
+
+movendo = function()
+{
+    //EU SO RODO SE SOMENTE SE EU TIVER UM ALVO
+    if (!alvo) return;
+        
+    //SE EU ESTOU SEM ALVO, O CODIGO DAQUI PARA BAIXO NÃO RODA
+    
+    
+    //ESSE CODIGO SO RODA SE EU TENHO ALVO
+    x = alvo.x;
+    y = alvo.y - 30;
+    
+    
+    
+}
+
+
+FEITO ISSO VAMOS AGR NA COLISAO DO OBJ COM O PLAYER 
+
+AQUI VAMOS DEFINIR Q O ALVO E O PLAYER E Q ELE VAI RODAR O ESTADO CORRETO CASO ELE FOR O PLAYER 
+
+
+OBJ_POWERUP - COLISAO COM O PLAYER
+
+
+//SE ELE AINDA NÃO É O MEU ALVO
+if (alvo == noone)
+{
+    //coloco o player no estado correto
+    other.pega_powerup()
+    
+    //DEFINO O MEU ALVO
+    alvo = other.id;
+    
+    
+    // VOU PARA A POSIÇÃO CORRETA
+    movendo();
+    
+    
+    
+    
+    
+}
+
+
+
+AULA 111 A 115 - INICIANDO AS PARTICULAS DO POWER UP
+
+
+VAMOS CRIAR UM OBJ CHAMADO "OBJ_PARTICULA_POWERUP" E NELE VAMOS CRIAR UMA SPRITE DE 2X2 ELA VAI SER DESSE TAMANHO POIS QUEREMOS ALGO PEQUENO DPS DISSO VAMOS DA A SPRITE DELA DE UMA QUADRADO BRANCO FEITO ISSO VAMOS DEIXA ESSE OBJ POR ENQUANTO DE LADO 
+
+
+VAMOS AGR NO "OBJ_POWERUP" LA VAMOS ADICIONAR O CODIGO QUE VAI SER A EXPLOSÃO DA PARTICULA NESSE CODIGO VAMOS DEFINIR A DIREÇÃO DA PARTIRCULA A VELOCIDADE E TB O ALVO A PARTICULA 
+
+
+OBJ POWER UP - CREATE
+
+
+
+//EXPLOSAO DE PARTICULAS
+explosao = function()
+{
+    //CRIANDO 20 PARTICULAS
+    repeat(20)
+    {
+       var _part = instance_create_layer(x, y, "Enfeites", obj_particula_powerup);
+        _part.speed = random_range(2,4);
+        _part.direction = random_range(0, 359);
+        
+        
+        //DANDO ALVO DA PARTICULA
+        _part.alvo = alvo;
+    }
+    
+    
+}
+
+FEITO ISSO VAMOS AGR NO OBJ PARTICULA POWER UP LA VAMOS DEFINIR DUAS VARIAVEIS COMO "NEGATIVAS" PARA A GENTE PODER ALTERAS NO FUTURO.
+
+
+
+
+OBJ PARTICULA POWER UP - CREATE
+
+alvo = noone;
+
+
+
+//UMA VARIAVEL PARA SABER SE EU A MINHA VELOCIDADE JA FOI ZERADA
+voltar = false;
+
+
+
+
+
+
+OBJ PARTICULA POWER UP - STEP
+
+
+//SO VOU RODAR MEU CODIGO SE EU TENHO UM ALVO
+if (!alvo) exit;
+    
+
+
+
+//SE EU AINDA NÃO ESTOU VOLTANDO EU DIMINUO A VELOCIDADE
+if (voltar == false)
+{
+    speed -= 0.05;
+    
+    
+    //CHECANDO SE EU JA ZEREI MINHA VELOCIDADE
+    if (speed <= 0)
+    {
+        //AVISO QUE JA ESTOU VOLTANDO
+        voltar = true;
+    }
+
+
+}
+
+
+
+else
+{
+    //SE EU JA ESTOU VOLTANDO, EU NÃO PRECISO DIMINUIR A MINHA VELOCIDADE  MAS EU PRECISO IR NA DIREÇÃO DO PLAYER
+    
+    //E AGORA EU PRECISO GANHAR VELOCIDADE
+    
+    //VOU GANHAR VELOCIDADE
+    speed += 0.05;
+    
+    
+    //SÓ VOU  RODAR IUSSO DEPOIS DE TER PERDIDO TODA A VELOCIDADE
+    direction = point_direction(x, y, alvo.x, alvo.y);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+AULA 116 A 117 - MELHORANDO O COMPORTAMENTO DAS PARTICULAS
+
+BASICAMENTE NESSA AULA A GENTE DA UMA MELHORA NAS PARTICULAS DEIXAMOS O CODIGO DE POINT DIRECTION COM SISTEMA DE RANDOM PARA NAO FICAR A MESMA COISA TODA A VEZ ALEM DEQ COLOCAMOS QUE QUANDO A PARTICULA VOLTAR PARA O PLAYER ELA SE DESTRUIR
+
+
+//OBJ PARTICULA POWER UP - STEP
+
+//SO VOU RODAR MEU CODIGO SE EU TENHO UM ALVO
+if (!alvo) exit;
+    
+
+
+
+//SE EU AINDA NÃO ESTOU VOLTANDO EU DIMINUO A VELOCIDADE
+if (voltar == false)
+{
+    speed -= 0.05;
+    
+    
+    //CHECANDO SE EU JA ZEREI MINHA VELOCIDADE
+    if (speed <= 0)
+    {
+        //AVISO QUE JA ESTOU VOLTANDO
+        voltar = true;
+   
+    
+        //DEFININDO A DIREÇÃO POIS AQUI O CODIGO SO RODA UMA VEZ
+        var _x = alvo.x + random_range(-5, 5);
+        var _y = alvo.y - 12 + random_range(-5, 5);
+        var _dir = point_direction(x, y, _x, _y);
+         
+        //SÓ VOU  RODAR ISSO DEPOIS DE TER PERDIDO TODA A VELOCIDADE
+        direction = _dir;
+        
+    
+     }
+
+    
+    
+}
+
+
+
+else
+{
+    //SE EU JA ESTOU VOLTANDO, EU NÃO PRECISO DIMINUIR A MINHA VELOCIDADE  MAS EU PRECISO IR NA DIREÇÃO DO PLAYER
+    
+    //E AGORA EU PRECISO GANHAR VELOCIDADE
+    
+    //VOU GANHAR VELOCIDADE
+    speed += 0.05;
+    
+    
+    //SE EU COLIDIR COM O PLAYER, EU ME DESTRUO
+    var _player = place_meeting(x, y, obj_player);
+    
+    //SE EU COLIDIR COM O PLAYER EU ME DESTRUO
+    if (_player)
+    {
+        //ME DESTRUO
+        instance_destroy();
+    }
+   
+    
+
+AULA 118 A 120 - ADICIONANDO MAIS GAME GEEL E AJUSTANDO O EFEITO MOLA
+
+
+BASICAMENTE NAS AULA 118 A GENTE COLOCOU O EFEITO MOLA TBM AJUSTAMOS A "COLISAO" DO PLAYER COM AS PARTICULAS UTILIZANDO O INSTANCE_PLACE 
+
+
+
+
+OBJ_PARTICULA_POWER UP - STEP
+
+else
+{
+    //SE EU JA ESTOU VOLTANDO, EU NÃO PRECISO DIMINUIR A MINHA VELOCIDADE  MAS EU PRECISO IR NA DIREÇÃO DO PLAYER
+    
+    //E AGORA EU PRECISO GANHAR VELOCIDADE
+    
+    //VOU GANHAR VELOCIDADE
+    speed += 0.05;
+    
+    
+    //SE EU COLIDIR COM O PLAYER, EU ME DESTRUO
+    var _player = instance_place(x, y, obj_player);
+    
+    //SE EU COLIDIR COM O PLAYER EU ME DESTRUO
+    if (_player)
+    {
+        //FAZENDO O EFEITO DE MOLA COM O PLAYER
+        with(_player)
+        {
+            var _xscale = random_range(-0.3, 0.3);
+            var _yscale = random_range(-0.3, 0.3);
+            
+            efeito_squash(1 + _xscale, 1 + _yscale);
+        }
+    
+        instance_destroy();
+    
+    }
+   
+    
+
+FEITO ISSO AGORA VAMOS FAZER O PLAYER SO MUDAR DE ESTADO APOS TODAS AS PARTICULAS SEREM DESTRUIDAS PARA FAZERMOS ISSO VAMOS AGORA NO "obj_player - CREATE" VAMOS NO ESTADO DE POWER UP MEIO LA VAMOS AJUSTAR ISSO
+
+
+
+
+
+OBJ_PLAYER - CREATE
+
+
+
+//MEIO
+estado_powerup_meio = function()
+{
+    
+    troca_sprite(spr_player_powerup_meio);
+    
+    
+    //EU SO VOU SAIR DO ESTADO POWER UP MEIO SE NÃO EXISTE MAIS PARTICULAS
+    if (!instance_exists(obj_particula_powerup))
+    {
+        estado = estado_powerup_fim;
+    }
+    
+  
+    
+
+    
+    
+   
+}
+ 
+
+AULA 121  MELHORANDO A EXIBIÇÃO DA PARTICULA
+
+
+
+BASICAMENTE NESSA AULA VAMOS COLOCAR PARA AS "PARTICULAS DA UMA ESTICADA COM BASE NA VELOCIDADE"
+
+
+
+//EU VOU ME ESTICAR COM BASE NA MINHA VELOCIDADE
+image_xscale = lerp(image_xscale, speed * 2, 0.2);
+image_angle = direction;
+
+
+
+
+
+
+AULA 122 A 123 - DESTRUINDO O ITEM POWER UP E FAZENDO A TINTA SO SER ATIVA DPS QUE PEGAR O POWER UP
+
+
+
+NA AULA 122 VAMOS FAZER O ITEM SUMIR AO SER PEGO COMO QUEREMOS QUE ISSO SEJA ATIVO O TEMPO TODO ENTÃO VAMOS NO STEP MAIS PRECISAMENENTE NO STEP DO OBJ_POWERUP
+
+
+
+OBJ_POWER UP - STEP
+
+
+
+
+
+if (alvo)
+{
+    image_alpha -= 0.01;
+    
+    //SE EU SUMI POR COMPLETO EU ME DESTRUO
+    if (image_alpha <= 0)
+    {
+        instance_destroy();
+    }
+}
+
+
+
+
+NA AULA 123 VAMOS AGORA FAZER O PODER DA TINTA SO SER ATIVO APOS PEGARMOS O POWER UP E BEM SIMPLES VAMOS NO CREATE DO OBJ PLAYER E LA VAMOS CRIAR UMA VARIAVEL 
+
+
+
+OBJ_PLAYER - CREATE
+
+
+//VARIAVEIS DE POWER UP
+power_tinta = false;
+power_pulo_duplo = false;
+
+
+
+
+
+FEITO ISSO VAMOS AGORA VOLTAR NO OBJ_POWERUP PARA AO COLIDIR O "power_tinta" SER TRUE E ASSIM PODER UTILIZAR O PODER DA TINTA
+
+
+VAMOS NA COLISAO DO OBJ_POWER_UP COM O PLAYER 
+
+
+
+
+OBJ_POWERUP - COLISAO COM PLAYER
+
+
+/SE ELE AINDA NÃO É O MEU ALVO
+if (alvo == noone)
+{
+    //coloco o player no estado correto
+    other.pega_powerup()
+    
+    //DEFINO O MEU ALVO
+    alvo = other.id;
+    
+    
+    // VOU PARA A POSIÇÃO CORRETA
+    movendo();
+    
+    
+    explosao();
+    
+    //AVISANDO QUE O PLAYER QUE ELE PODE USAR O POWER UP DA TINTA
+    other.power_tinta = true;  //VAMOS ADICIONAR ESSA LINHA DE CODIGO AO COLIDIR SER TRUE
+}
+
+
+FEITO ISSO AGORA VAMOS NOVAMENTE NO OBJ PLAYER E ONDE TEM O "PAINT" VAMOS ADICIONAR NOSSA VARIAVEL NO ESTADO DE PARADO 
+
+
+
+
+    if(paint && power_tinta)
+    {
+        estado = estado_entrando_tinta;
+        
+    }
+
+
+E NO ESTADO DE SE MOVENDO  FICANDO O CODIGO ASSIM.
+
+     
+    if (paint && power_tinta)
+    {
+        estado = estado_entrando_tinta;
+    }   
+
+
+
+
+AULA 124 a 125 - DELIMTANDO A AREA DO POWER 
+
+PRIMEIRO VAMOS CRIAR UMA TILE LAYER E VAMOS DA O NOME DELA DE "tl_tinta" APOS ISSO VAMOS COLOCAR ELA ABAIXO DE DECORAÇÕES E ACIMA DO "tl_level" FEITO ISSO VAMOS PEGAR O TILE SET DO CHAO DA TINTA E VAMOS COLOCAR NO CENARIO DPS DE FEITO ISSO VAMOS AGR NO OBJ PLAYER 
+
+
+OBJ PLAYER - CREATE
+
+VAMOS CRIAR DUAS VARIAVEIS UMA PARA "CHECAR A TINTA" E A OUTRA PARA O TILESET
+
+
+chao_tinta = false;
+
+tile_set_tinta = layer_tilemap_get_id("tl_tinta");
+
+
+
+
+
+FEITO ISSO AGR VAMOS NA NOSSA FUNCTION DE "checar_chao" VAMOS ADICIONAR NOSSA VARIAVEL DENTRO DO CHECA CHAO PARA PODER CHECAR SE ESTAMOS TOCANDO NO CHAO DA TINTA
+
+
+
+checa_chao = function()
+{
+    chao = place_meeting(x, y + 1, colisoes);
+    
+    //CHECANDO SE TEM TINTA
+    chao_tinta = place_meeting(x, y + 1, tile_set_tinta); //ESSE y + 1 E POR CAUSA Q NOSSO PONTO DE ORIGEM ESTA UM 	POUCO ACIMA DO PE DO PLAYER
+}
+
+ 
+
+
+FEITO ISSO AGR VAMOS NO NOSSO ESTADO DE PARADO E VAMOS ADICIONAR O NOSSO "chao_tinta" ONDE TA O IF DO "paint" FICANDO ASSIM
+
+
+
+    if(paint && power_tinta && chao_tinta)
+    {
+        estado = estado_entrando_tinta;
+        
+    }
+
+
+
+A MESMA COISA VAMOS FAZER NO NOSSO ESTADO DE MOVENDO 
+
+
+
+
+    if(paint && power_tinta && chao_tinta)
+    {
+        estado = estado_entrando_tinta;
+        
+    }
+
+
+
+
+AULA 126 A 127 - LIMITANDO O MOVIMENTO NA TINTA
+
+
+
+BASICAMENTE VAMOS LIMITAR ELE QUANDO ESTIVER NA TINTA SO PODER ANDAR ONDE TEM O CHAO DE TINTA E BEM SIMPLES DE FAZER ISSO
+
+VAMOS NO NOSSO ESTADO DE "estado_tinta_loop" NA NOSSA VARIAVEL TEMPORARIA "_parar" VAMOS ADICIONAR NO LUGAR DE "COLISOES" NOSSA "tile_set_tinta" FICANDO O CODIGO ASSSIM
+
+
+estado_tinta_loop = function()
+{   
+ 
+    troca_sprite(spr_player_tinta_loop);
+    aplica_velocidade();
+    
+    velv = 0; //ZEREI PARA O PLAYER NAO PODER PULAR QUANDO ESTIVER NO ESTADO DE TINTA
+    
+     
+    //SE A MINHA FRENTE EMBAIXO DE MIM NÃO TIVER CHAO EU ZERO MINHA VELOCIDADE
+    var _parar = !place_meeting(x + (velh * 18), y + 1, tile_set_tinta);
+    
+    
+    if (_parar )
+    {
+        velh = 0;
+    }
+    
+    
+    if(paint)
+    {
+        estado = estado_saindo_tinta;
+        //CRIANDO AS PARTICULAS
+        instance_create_depth(x, y, depth -1, obj_tinta_sair_particula);
+    
+        
+    }
+   
+}
+
+
+
+
+AULA 128   - ADICIONANDO SCREENSHAKE
+
+
+VAMOS NA PASTA DE "EFEITOS" E VAMOS JOGAR NOSSO "obj_screenshake" NA LAYER DE "Enfeites" FEITO ISSO VAMOS NO NOSSO "obj_particula_powerup" E LA VAMOS CHAMAR O NOSSO SCREEN SHAKE NO ELSE QUE ESTA NO STEP ALEM DISSO VAMOS TB AUMENTAR A VELOCIDADE DAS PARTICULAS DEIXANDO EM 0.1
+
+
+OBJ_PARTICULA_POWERUP - STEP
+
+
+
+else
+{
+    //SE EU JA ESTOU VOLTANDO, EU NÃO PRECISO DIMINUIR A MINHA VELOCIDADE  MAS EU PRECISO IR NA DIREÇÃO DO PLAYER
+    
+    //E AGORA EU PRECISO GANHAR VELOCIDADE
+    
+    //VOU GANHAR VELOCIDADE
+    speed += 0.1;
+    
+    
+    //SE EU COLIDIR COM O PLAYER, EU ME DESTRUO
+    var _player = instance_place(x, y, obj_player);
+    
+    //SE EU COLIDIR COM O PLAYER EU ME DESTRUO
+    if (_player)
+    {
+        //FAZENDO O EFEITO DE MOLA COM O PLAYER
+        with(_player)
+        {
+            var _xscale = random_range(-0.3, 0.3);
+            var _yscale = random_range(-0.3, 0.3);
+            
+            efeito_squash(1 + _xscale, 1 + _yscale);
+        }
+    
+        
+        //DANDO UM SCREENSHAKE
+        screenshake(2)  // AQUI O SCREENSHAKE
+        
+        
+        instance_destroy();
+    
+    }
+   
+    
+        
+}
+
+
+AULA 129 A 130 - DANDO FUNCIONALIDADE AO PODER A AJUSTANDO A MASCARA DE COLISAO DA TINTA 
+
+
+NESSA AULA APRENDEMOS A AJUSTAR A MASCARA DE COLISAO VIA CODIGO E MT INTERESSANTE PRIMEIRO VAMOS NO NOSSO ESTADO DE TINTA LOOP E NO NOSSO ESTADO DE TINTA SAIRVAMOS ADICIONAR UM "NOVO" CODIDO CHAMADO "mask_index" FICANDO OS CODIGO ASSIM
+
+
+
+OBJ_PLAYER - CREATE 
+
+
+
+estado_tinta_loop = function()
+{   
+ 
+    troca_sprite(spr_player_tinta_loop);
+    aplica_velocidade();
+    
+    velv = 0; //ZEREI PARA O PLAYER NAO PODER PULAR QUANDO ESTIVER NO ESTADO DE TINTA
+    
+     
+    
+    //EU VOU TER A MASCARA DE COLISÃO MENOR
+    mask_index = spr_player_tinta_loop;
+    
+    
+    //SE A MINHA FRENTE EMBAIXO DE MIM NÃO TIVER CHAO EU ZERO MINHA VELOCIDADE
+    var _parar = !place_meeting(x + (velh * 18), y + 1, tile_set_tinta);
+    
+    
+    if (_parar )
+    {
+        velh = 0;
+    }
+    
+    
+    if(paint)
+    {
+        estado = estado_saindo_tinta;
+        //CRIANDO AS PARTICULAS
+        instance_create_depth(x, y, depth -1, obj_tinta_sair_particula);
+    
+        
+    }
+   
+}
+
+
+
+//ESTADO SAINDO DA TINTA
+estado_saindo_tinta = function()
+{
+    velh = 0; //ZERANDO O VELH AO SAIR DA TINTA
+    
+    troca_sprite(spr_player_tinta_saindo);
+    
+    
+    //A MINHAS MASCARA DE COLISAO VOLTA AO ORIGINAL
+    mask_index = spr_player_idle;
+    
+    
+    
+    if (acabou_animacao())
+    {
+        estado = estado_parado;
+    }
+    
+}
+
+
+
+
+
+ALEM DISSO TB APRENDEMOS COMO "DEBUGAR" A COLISAO UTILIZANDO O CODIGO ABAIXO
+
+draw_rectangle(bbox_left, bbox_top, bbox_right, bbox_bottom, true); //AQUI NESSE CODIGO EU ESTOU UTILIZANDO O "BBOX" O BBOX E NADA MAIS É DOQ A COLISAO ENTAO ESTAMOS DEFININDO QUE QUEREMOS A COLISAO DO RIGHT, TOP, LEFT, BOTTOM E POR FIM COLOCAMOS QUE E TRUE POIS ESTAMOS DIZENDO Q E UM RETANGULO OU QUADRADO
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
